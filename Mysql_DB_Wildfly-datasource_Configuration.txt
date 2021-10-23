@@ -1,0 +1,54 @@
+############################################# Jboss Datasource Configuration ################################################ 
+Min Connection: 100
+Max Connection: 1000  
+
+app_instance_datasource_Max_conection  = (max_connection_Database/app_instance_count) + (max_connection_Database/2*app_instance_count)
+
+- Configure Connection Validation Configuration on Connection borrow or release or background check
+
+idle-timeout-minutes: 30   # This is in minute 
+query-timeout: 100 	   # 
+blocking-timeout-millis: 60000
+set-tx-query-timeout: true
+use-try-lock: 100
+allocation-retry: 2
+allocation-retry-wait-millis: 6000
+
+- Query timeout(idle timeout/10 ~ 20) < Background Validation Time (idle timeout/2) < idle timeout <  Database wait_timeout  
+
+### Database Configuration ###
+max_connections = 5000
+wait_timeout=6000   # By Default 8 Hours => This Need to set Max if No Connection leaks in Application to achieve optimal performance by reusing the same connection    
+interactive_timeout=600 
+connect_timeout=5
+
+innodb_io_capacity and innodb_io_capacity_max  [These Parameter's to set when performing a lot of writes all the time ]
+innodb_io_capacity_max=6000   [If SSD Available]
+innodb_io_capacity=3000  (50% of the max)
+
+# No of I/O threads for read and write operations
+innodb_read_io_threads = 16
+innodb_write_io_threads = 4
+
+# Example
+If wait_timeout is 1800 (30 Minutes), the DB Connection will close in 30 minutes if the connection is idle (indicated by Sleep in the command column of the processlist).
+If connect_timeout is 10, then mysqld will reject you if you cannot login (authenticate) in 10 seconds.
+
+### Key Terminology
+- Interactive SQL: SQL statements input from terminal; DBMS outputs to screen.
+- Non-interactive SQL: SQL statements are included in an application program written in a host language, like C, Java, COBOL.
+
+- interactive_timeout: wait Timeout for interactive session, The number of seconds the server waits for activity on an interactive connection before closing it.
+- wait_timeout : wait Timeout for non-interactive session, The number of seconds the server waits for activity on a noninteractive connection before closing it.
+- connect_timeout : The number of seconds that the mysqld server waits for a connect packet before responding with Bad handshake. max time can be use just to make connection.
+
+
+### Hibernate Configuration ###
+
+<property name="hibernate.connection.release_mode">auto</property> 
+<property name="hibernate.connection.autocommit">true</property>
+
+<property name="hibernate.connection.is-connection-validation-required">true</property>
+<property name="hibernate.connection.isolation">1</property>
+
+

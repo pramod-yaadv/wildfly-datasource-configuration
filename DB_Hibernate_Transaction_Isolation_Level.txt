@@ -1,0 +1,36 @@
+###################################################### Isolation Level in Hibernate #######################################################
+The isolation level is one of the database-level settings that we sometimes forget to set.
+
+We could say that it determines the way in which the data is "locked" or isolated from other processes while being accessed, that is, it defines how and when the changes made by a transaction are visible by other concurrent operations, influencing the following anomalies:
+
+1. Dirty Reads: Occurs when a transaction reads data modified by other concurrent processes that have not yet committed, that is why it is called dirty reading.
+
+2. Nonrepeatable Reads:It occurs when the same record is read more than once within a transaction and the data obtained is different, probably because another concurrent process updated them.
+
+3. Phantom Reads: It occurs when in a transaction we execute the same query more than once and obtain different results, for example if another transaction added new records that satisfy the search criteria of the query.
+
+
+# The ANSI / ISO SQL standard defines four levels of isolation:
+
+1. READ UNCOMMITTED: Allows Dirty Reads, Nonrepeatable Reads, and PhantomReads to occur. It is the least restrictive option, recommended if read-only data or very few updates are handled.
+
+2. READ COMMITTED:Avoid Dirty Reads, but allow Nonrepeatable Reads and Phantom Reads to occur.
+
+3. REPEATABLE READ: Only allows Phantom Reads to be produced.
+
+4. SERIALIZABLE: Avoid all the previous cases, it is the most restrictive option.
+
+Each database manager has its own way of configuring the isolation level through a graphical administrator or by command line, on the other hand it is also good to clarify that the products differ in the default values, for example in MySQL the default is REPEATABLE READ, on the other hand in Oracle and SQL Server it is READ COMMITTED.
+
+If we use Hibernate as a persistence framework we can use the property "hibernate.connection.isolation" in the hibernate.cfg.xml. For example, to establish the READ COMMITTED strategy we would use:
+
+<property name="hibernate.connection.isolation">2</property>
+
+The possible values ​​are the same as those defined by the java.sql.Connection interface :
+
+1: READ UNCOMMITTED
+2: READ COMMITTED
+4: REPEATABLE READ
+8: SERIALIZABLE
+
+################################################################################################################################################################
