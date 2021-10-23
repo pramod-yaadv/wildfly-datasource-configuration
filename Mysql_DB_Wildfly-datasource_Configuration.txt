@@ -2,12 +2,13 @@
 Min Connection: 100
 Max Connection: 1000  
 
+# Connection Formula: 
 app_instance_datasource_Max_conection  = (max_connection_Database/app_instance_count) + (max_connection_Database/2*app_instance_count)
 
-- Configure Connection Validation Configuration on Connection borrow or release or background check
+- Configure Connection Validation Configuration on Connection borrow or release or background check for Connection Validity
 
-idle-timeout-minutes: 30   # This is in minute 
-query-timeout: 100 	   # 
+idle-timeout-minutes: 30    
+query-timeout: 100 	  
 blocking-timeout-millis: 60000
 set-tx-query-timeout: true
 use-try-lock: 100
